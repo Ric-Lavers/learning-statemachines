@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <script>
+    var firstSymbol = Symbol('stepOne')
+    var secondSymbol = Symbol('kn_2')
+    var stop = false
+  </script>
+  <title>Timê Fūnc't.ôn's _window.requestAnimationFrame ( ... )</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css"> -->
+  <script src="main.js"></script>
+  <style>
+    svg {
+      width: 100%;
+      height: 100%;
+      stroke: rgb(114, 212, 114);
+      fill: black;
+      fill-opacity: 0.6;
+      stroke-width: 2px;
+    }
+
+    body {
+      background-color: #122
+    }
+
+    #behind {
+      stroke: cyan;
+      fill: none;
+      stroke: black;
+    }
+  </style>
+
+</head>
+
+<body>
+  <svg id="aeonKNight" viewBox="-200 -200 400 400">
+    <!-- <text id="i" x="0" y="0" fill="red">10</text> -->
+    <defs>
+      <radialGradient id="grad1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+        <stop offset="0%" style="stop-color:lime;stop-opacity:1" />
+        <stop offset="1%" style="stop-color:#fff;stop-opacity:1" />
+        <stop offset="10%" style="stop-color:rgb(0,0,0);stop-opacity:1" />
+        <stop offset="70%" style="stop-color:lime;stop-opacity:0.3" />
+        <stop offset="80%" style="stop-color:lime;stop-opacity:0.9" />
+        <stop offset="95%" style="stop-color:rgb(255,255,255);stop-opacity:0.8" />
+        <stop offset="100%" style="stop-color:lime;stop-opacity:0.7" />
+      </radialGradient>
+    </defs>
+    <!--
+		<ellipse stroke-width="0" cx="0" cy="0" rx="100" ry="100" fill="url(#grad1)" />
+		 <polyline id="behind" points="25,0  123.38,123.38  0,25  -123.38,123.38  -25,0  -123.38,-123.38  0,-25  123.38,-123.38  25,0  50,0  105.75,105.75  0,50  -105.75,105.75  -50,0  -105.75,-105.75  0,-50  105.75,-105.75  50,0  75,0  88.13,88.13  0,75  -88.13,88.13  -75,0  -88.13,-88.13  0,-75  88.13,-88.13  75,0  100,0  70.5,70.5  0,100  -70.5,70.5  -100,0  -70.5,-70.5  0,-100  70.5,-70.5  100,0  125,0  52.88,52.88  0,125  -52.88,52.88  -125,0  -52.88,-52.88  0,-125  52.88,-52.88  125,0  150,0  35.25,35.25  0,150  -35.25,35.25  -150,0  -35.25,-35.25  0,-150  35.25,-35.25  150,0  175,0  17.63,17.63  0,175  -17.63,17.63  -175,0  -17.63,-17.63  0,-175  17.63,-17.63  175,0 "
+		/> -->
+    <polyline id="KN_poly"
+      points="25,0  123.38,123.38  0,25  -123.38,123.38  -25,0  -123.38,-123.38  0,-25  123.38,-123.38  25,0  50,0  105.75,105.75  0,50  -105.75,105.75  -50,0  -105.75,-105.75  0,-50  105.75,-105.75  50,0  75,0  88.13,88.13  0,75  -88.13,88.13  -75,0  -88.13,-88.13  0,-75  88.13,-88.13  75,0  100,0  70.5,70.5  0,100  -70.5,70.5  -100,0  -70.5,-70.5  0,-100  70.5,-70.5  100,0  125,0  52.88,52.88  0,125  -52.88,52.88  -125,0  -52.88,-52.88  0,-125  52.88,-52.88  125,0  150,0  35.25,35.25  0,150  -35.25,35.25  -150,0  -35.25,-35.25  0,-150  35.25,-35.25  150,0  175,0  17.63,17.63  0,175  -17.63,17.63  -175,0  -17.63,-17.63  0,-175  17.63,-17.63  175,0 " />
+    <polyline style="display:none;" id="kn_2" points="
+								 150,0 50,0   0,150 -50,0
+
+								 0,-150  50,0   100,0  0,100
+								 
+								 -100,0  0,-100 100,0  150,0
+								 0,50   -150,0  0,-50  150,0" />
+    <circle id="pos" cy="0" cx="0" r="12.5" fill="url(#grad1)" />
+  </svg>
+  <form style="display:none; flex; justify-content: center; flex-direction: column; width: 50%; ">
+    <input id="handleDuration" oninput="setDuration(this.value)" style="width: 100%;" type="range" min="0" max="150"
+      value="500">
+    />
+    <input id="ms" style="width: 130px;" value="0" />
+
+    <script>
+      // document.getElementById('handleDuration').setAttribute('max', l)
+
+      duration = {
+        ms: document.getElementById('handleDuration'.value)
+      }
+
+      function setDuration(event) {
+        duration.ms = event * 10
+        document.getElementById('ms').setAttribute('value',
+          `${duration.ms}ms   ${duration.ms / 1000}s  ${(1/ (duration.ms / 1000)) * 60 |0}bpm`)
+      }
+    </script>
+  </form>
+
+  <script>
+    aeonKNight = document.getElementById("aeonKNight")
+  </script>
+  <script>
+    /* DEV 
+		
+		 */
+    cl = console.log
+
+    updateI = () => document.getElementById('i').innerHTML = i
+
+    sP = (element) => (prop, value) => element.style.setProperty(prop, value)
+
+    /* 
+		
+		*/
+  </script>
+  <script>
+    function appendStyle(createTextNode) {
+      let style = document.createElement("style");
+      style.appendChild(document.createTextNode(createTextNode));
+      document.head.appendChild(style);
+      return style.sheet;
+    };
+  </script>
+  <script>
+    points = {
+      [firstSymbol]: Array.from(document.getElementById("KN_poly").points),
+      [secondSymbol]: Array.from(document.getElementById("kn_2").points),
+    }
+    polys = {
+      [firstSymbol]: document.getElementById("KN_poly"),
+      [secondSymbol]: document.getElementById("kn_2"),
+    }
+  </script>
+  <script>
+    //untested
+    stepCB = (rate, cb) => {
+      let id = 0
+      let start = null
+
+      function next(timestamp, rate, cb) {
+
+        progress = timestamp - start;
+        if (id % rate == 0) {
+          id = wrAF(timestamp => {
+            cb()
+            next(timestamp, rate)
+          })
+        }
+      }
+      next(start)
+
+    }
+  </script>
+  <!-- this one works -->
+  <script>
+    pos = document.getElementById("pos")
+    p = polys[firstSymbol].points
+    l = p.length
+    ptl = polys[firstSymbol].getTotalLength()
+    wrAF = window.requestAnimationFrame
+
+    // void appendStyle(`svg { opacity: 0.6;stroke-dasharray: ${ptl}; stroke-dashoffset: ${ptl/4};}`)
+
+
+
+    function shift(symbol) {
+      p = polys[symbol].points
+      l = p.length
+      np = Array.from(points[symbol])
+      let wow = np.splice(i % l - 1, l).concat(np).reduce((a, {
+        x,
+        y
+      }) => a.concat([x, y]), [])
+      double = n => n * 2
+      adding = (i % (l * 2) <= i % l)
+      gap = (adding) ? l - i % l : i % l
+      gap = 2
+      // cl(i%(l*2), i%l, i%(l*2) <= i%l )
+      let a = wow.splice(0, (double(l)) - double(gap));
+      // polys[symbol].setAttribute('points', (a).toString()
+      // 	)	
+      // cl(wow)
+      if (a.length) {
+        pos.setAttribute(('cx'), a[0] | 0)
+        pos.setAttribute(('cy'), a[1] | 0)
+        // !adding ? (
+        // pos.setAttribute(('cx'), a[0]|0),
+        // pos.setAttribute(('cy'), a[1]|0)
+        // ):(
+        // pos.setAttribute(('cx'), a[a.length - 2]|0),
+        // pos.setAttribute(('cy'), a[a.length - 1]|0))
+        // cl( a )
+      }
+    }
+    /*
+     the shift function is Valid, but not relying on setTimeout over requestAnimationFrame is a unrefined method.
+    */
+    i = 0
+    spins = 1 * l
+
+    function up(fn) {
+      if (i >= spins) i = 0;
+      /* */
+      if (stop) {
+        clearTimeout(cT);
+        return;
+      };
+      i++;
+      fn();
+      cT = setTimeout(() => up(fn), 700)
+    }
+    // up(shift)
+
+
+    /* *options: <>arrayOf([ dur: ms, repeat: bool ])  *currentId: 
+    effectTimingSwitch  */
+    var start = null;
+    id = 0
+    const effectTimingSwitch = (options, currentId) => {
+      options.forEach(({
+        frames,
+        cb
+      }) => {
+
+        if (0 === (currentId % frames)) {
+          cb()
+        }
+      })
+    }
+    /*  */
+    /*a step functions' saving grace is the exit method  */
+    function step(timestamp, options = {
+      dur: 2000,
+      repeat: true
+    }) {
+
+      // cl(options)
+      // cl(id, 360%id)
+      if (!start) start = timestamp;
+      var progress = timestamp - start;
+      // cl(id, progress)
+      if (id % 4 == 0) {
+        // sP(aeonKNight)('transform', `rotate(${id%360}deg)`)
+      }
+      effectTimingSwitch([{
+          frames: 16,
+          cb: () => (i++, shift(firstSymbol))
+        },
+        // { frames: 6, cb:() => (i++,shift(secondSymbol)) },
+      ], id)
+      // if(id%6==0)
+      // {
+      /* shift(symbol) */
+      // (i++,shift())
+
+      // // color=`rgb(${[id%126|0,id%256|0,id%126|0].join()})`
+      // // sP(aeonKNight)('stroke', color)
+
+      // }
+
+      /* The exit method */
+      if ((progress < options.dur || options.repeat) && stop !== true) {
+        id = wrAF(t => step(t, options))
+      } else {
+        cl('done');
+        stop = true
+      }
+
+    }
+    /* The set up */
+    const withProps = props => () => {
+      wrAF(timestamp => step(timestamp, props))
+    }
+    /* Execution */
+    withProps({
+      dur: 10000,
+      repeat: true
+    })()
+    // wrAF(step); // withoutProps
+  </script>
+</body>
+
+</html>
+
+<!-- points="0,0  141,141  0,0  -141,141  0,0  -141,-141  0,0  141,-141  0,0  25,0  123.38,123.38  0,25  -123.38,123.38  -25,0  -123.38,-123.38  0,-25  123.38,-123.38  25,0  50,0  105.75,105.75  0,50  -105.75,105.75  -50,0  -105.75,-105.75  0,-50  105.75,-105.75  50,0  75,0  88.13,88.13  0,75  -88.13,88.13  -75,0  -88.13,-88.13  0,-75  88.13,-88.13  75,0  100,0  70.5,70.5  0,100  -70.5,70.5  -100,0  -70.5,-70.5  0,-100  70.5,-70.5  100,0  125,0  52.88,52.88  0,125  -52.88,52.88  -125,0  -52.88,-52.88  0,-125  52.88,-52.88  125,0  150,0  35.25,35.25  0,150  -35.25,35.25  -150,0  -35.25,-35.25  0,-150  35.25,-35.25  150,0  175,0  17.63,17.63  0,175  -17.63,17.63  -175,0  -17.63,-17.63  0,-175  17.63,-17.63  175,0" -->
+<!-- 
+points= "
+	50,0   0,150 -50,0
+		0,-150  50,0   100,0  0,100
+		-100,0  0,-100 100,0  150,0
+		0,50   -150,0  0,-50  150,0"  -->
+<!-- 200,0
+		0,0    -200,0  0,0    200,0`" -->
+
+
+1 frame is 16ms,
+
+unless it's not.
+
+
+But its minimal value is 60 frames per second 1000ms/ 60ms === 16.66ms
+
+window.requestAnimationFrame
+Provides a method to capture the timestamp of each frame, and a way to identify each capture.
+
+If you have ever seen the API waterfall column in a browsers developer tools, you may of noticed that the browser is
+capturing the amount of time (in milliseconds ) since the page loaded.
+
+performance.now()
+Returns the current amount of time (in microseconds) since the page loaded.
+
+
+<script>
+  /**
+   * 
+   * */
+  const bpmToMs = (bpm, options = {
+    decimals: 2
+  }) => {
+    //* performance.now() is measured in _microseconds_
+    if (options.decimals > 14) {
+      console.warn('max decimals is 14')
+    }
+
+    let beatsPerMs = 60 / bpm * 1000
+    let decimalPlaces = 10 ** options.decimals
+
+    return Math.round(beatsPerMs * decimalPlaces) / decimalPlaces
+  }
+</script>
