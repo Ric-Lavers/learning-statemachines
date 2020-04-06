@@ -6,7 +6,9 @@ export const redditMachine = Machine({
   id: "reddit",
   initial: "idle",
   context: {
-    subreddit: null // none selected
+    subreddit: null, // none selected
+    posts: [{ title: "fetch for items" }],
+    count: 0
   },
   states: {
     idle: {},
@@ -21,13 +23,49 @@ export const redditMachine = Machine({
             onDone: {
               target: "loaded",
               actions: assign({
-                posts: (context, event) => event.data
+                posts: (context, event) => {
+                  console.log("onDone");
+                  return event.data;
+                }
               })
             },
-            onError: "failed" //? <- is this the same as target?
+            onError: {
+              target: "retry",
+              actions: assign({
+                count: ({ count }) => count + 1
+              })
+            }
           }
         },
         loaded: {},
+        retry: {
+          on: {
+            "": {
+              target: "loading",
+              cond: "glassIsFull"
+            },
+            RETRY: {
+              target: "loading",
+              actions: assign((context, event) => {
+                console.log("context.count", context.count);
+
+                if (context.count < 6) {
+                  return {
+                    count: context.count + 1
+                  };
+                }
+              })
+            }
+          },
+          invoke: {
+            id: "test",
+            target: "loading"
+            // src: () =>
+            //   assign({
+            //     count: ({ count }) => count + 1
+            //   })
+          }
+        },
         failed: {}
       }
     }
@@ -36,10 +74,7 @@ export const redditMachine = Machine({
     SELECT: {
       target: ".selected",
       actions: assign({
-        subreddit: (context, event) => {
-          console.log({ context, event });
-          return event.name;
-        }
+        subreddit: (context, event) => event.name
       })
     }
   }
@@ -79,8 +114,5 @@ function invokeFetchSubreddit(context) {
     .then(response => response.json())
     .then(json => {
       return json.data.children.map(child => child.data);
-    })
-    .catch(err => {
-      console.log(err);
     });
 }

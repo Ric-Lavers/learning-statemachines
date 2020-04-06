@@ -1,0 +1,33 @@
+* {
+	position: relative;
+	box-sizing: border-box;
+}
+
+body,
+html {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+body::before {
+	content: attr(data-state);
+	font-size: 2rem;
+	font-family: monospace;
+	position: absolute;
+	padding: 1rem;
+	z-index: 99;
+	right: 0;
+}
+
+body[data-state="dragging"] #box {
+	background: red;
+}
+
+#box {
+	height: 20vmin;
+	width: 20vmin;
+	background: #99ccff;
+	border-radius: 50%;
+}
