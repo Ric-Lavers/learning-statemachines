@@ -1,14 +1,16 @@
-import React from "react";
-import { useMachine } from "@xstate/react";
-import { Machine, assign } from "xstate";
+import { Machine, assign } from "xstate"
 
+const selectEvent = {
+  type: "SELECT", // event type
+  name: "funny", // subreddit name
+}
 export const redditMachine = Machine({
   id: "reddit",
   initial: "idle",
   context: {
-    subreddit: null, // none selected
+    subreddits: {}, // none selected
     posts: [{ title: "fetch for items" }],
-    count: 0
+    count: 0,
   },
   states: {
     idle: {},
@@ -18,73 +20,79 @@ export const redditMachine = Machine({
         loading: {
           invoke: {
             id: "fetch-subreddit",
+            autoForward: true,
             src: invokeFetchSubreddit,
-            // special x-state transitions for promises
+            //* special x-state transitions for promises
             onDone: {
               target: "loaded",
-              actions: assign({
-                posts: (context, event) => {
-                  console.log("onDone");
-                  return event.data;
+              actions: assign((context, event) => {
+                return {
+                  subreddits: {
+                    [event.data.name]: event.data.data,
+                    ...context.subreddits,
+                  },
+                  posts: event.data.data,
                 }
-              })
+              }),
             },
             onError: {
               target: "retry",
-              actions: assign({
-                count: ({ count }) => count + 1
-              })
-            }
-          }
+              actions: assign(({ count }) => {
+                return {
+                  count: count + 1,
+                }
+              }),
+            },
+          },
         },
         loaded: {},
         retry: {
           on: {
             "": {
               target: "loading",
-              cond: "glassIsFull"
+              cond: "glassIsFull",
             },
             RETRY: {
               target: "loading",
               actions: assign((context, event) => {
-                console.log("context.count", context.count);
+                console.log("context.count", context.count)
 
                 if (context.count < 6) {
                   return {
-                    count: context.count + 1
-                  };
+                    count: context.count + 1,
+                  }
                 }
-              })
-            }
+              }),
+            },
           },
           invoke: {
             id: "test",
-            target: "loading"
+            target: "loading",
             // src: () =>
             //   assign({
             //     count: ({ count }) => count + 1
             //   })
-          }
+          },
         },
-        failed: {}
-      }
-    }
+        failed: {},
+      },
+    },
   },
   on: {
-    SELECT: {
-      target: ".selected",
-      actions: assign({
-        subreddit: (context, event) => event.name
-      })
-    }
-  }
-});
-
-// sample SELECT eventxp
-const selectEvent = {
-  type: "SELECT", // event type
-  name: "funny" // subreddit name
-};
+    SELECT: [
+      {
+        target: ".selected",
+        cond: (context, event) => !context.subreddits[event.name],
+        actions: assign({
+          subreddit: (context, event) => event.name,
+        }),
+      },
+      {
+        target: ".selected.loaded",
+      },
+    ],
+  },
+})
 
 /* --- */
 
@@ -98,8 +106,8 @@ const selectEvent = {
 //   });
 // }
 // fetch = require("node-fetch");
-function invokeFetchSubreddit(context) {
-  const { subreddit } = context;
+function invokeFetchSubreddit(context, { name }) {
+  const { subreddits } = context
 
   // return new Promise((res, rej) => {
   //   setTimeout(() => {
@@ -110,9 +118,12 @@ function invokeFetchSubreddit(context) {
   //   }, 1500);
   // });
 
-  return fetch(`https://www.reddit.com/r/${subreddit}.json`)
+  return fetch(`https://www.reddit.com/r/${name}.json`)
     .then(response => response.json())
     .then(json => {
-      return json.data.children.map(child => child.data);
-    });
+      return {
+        name,
+        data: json.data.children.map(child => child.data),
+      }
+    })
 }

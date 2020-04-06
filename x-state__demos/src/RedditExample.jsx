@@ -1,30 +1,30 @@
-import React from "react";
-import { useMachine } from "@xstate/react";
+import React from "react"
+import { useMachine } from "@xstate/react"
 
-import { redditMachine } from "./XstateRedditExample";
+import { redditMachine } from "./XstateRedditExample"
 
-const subreddits = ["frontend", "reactjs", "vuejs", "funny"];
+const subreddits = ["frontend", "reactjs", "vuejs", "funny"]
 
 const RedditExample = () => {
   const [
     current,
-    send // shape = (type, name)
-  ] = useMachine(redditMachine);
-  const { subreddit, posts } = current.context;
+    send, // shape = (type, name)
+  ] = useMachine(redditMachine)
+  const { subreddit, posts } = current.context
   // console.log(current.context);
   // console.log({ subreddit, posts });
   return (
     <section>
       <header>
-        <pre>{str(current.value)}</pre>
+        <pre>{JSON.stringify(current.value)}</pre>
         <select
           onChange={e => {
             // console.log(e.target.value);
 
-            send("SELECT", { name: e.target.value });
+            send("SELECT", { name: e.target.value })
           }}>
           {subreddits.map(subreddit => {
-            return <option key={subreddit}>{subreddit}</option>;
+            return <option key={subreddit}>{subreddit}</option>
           })}
         </select>
       </header>
@@ -45,7 +45,7 @@ const RedditExample = () => {
         )}
       </section>
     </section>
-  );
-};
+  )
+}
 
-export default RedditExample;
+export default RedditExample
