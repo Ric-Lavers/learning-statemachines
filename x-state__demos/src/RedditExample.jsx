@@ -11,19 +11,18 @@ const RedditExample = () => {
     send, // shape = (type, name)
   ] = useMachine(redditMachine)
   const { subreddit, posts } = current.context
-  // console.log(current.context);
-  // console.log({ subreddit, posts });
+
   return (
     <section>
       <header>
         <pre>{JSON.stringify(current.value)}</pre>
         <select
-          onChange={e => {
+          onChange={(e) => {
             // console.log(e.target.value);
 
             send("SELECT", { name: e.target.value })
           }}>
-          {subreddits.map(subreddit => {
+          {subreddits.map((subreddit) => {
             return <option key={subreddit}>{subreddit}</option>
           })}
         </select>
@@ -35,7 +34,7 @@ const RedditExample = () => {
         {current.matches({ selected: "loading" }) && <div>Loading...</div>}
         {current.matches({ selected: "loaded" }) && (
           <ul>
-            {(posts || []).map(post => (
+            {(posts || []).map((post) => (
               <>
                 <li key={post.title}>{post.title}</li>
                 {post.url && <img alt="img" src={post.url} />}

@@ -4,6 +4,7 @@ const selectEvent = {
   type: "SELECT", // event type
   name: "funny", // subreddit name
 }
+
 export const redditMachine = Machine({
   id: "reddit",
   initial: "idle",
@@ -68,10 +69,6 @@ export const redditMachine = Machine({
           invoke: {
             id: "test",
             target: "loading",
-            // src: () =>
-            //   assign({
-            //     count: ({ count }) => count + 1
-            //   })
           },
         },
         failed: {},
@@ -119,11 +116,11 @@ function invokeFetchSubreddit(context, { name }) {
   // });
 
   return fetch(`https://www.reddit.com/r/${name}.json`)
-    .then(response => response.json())
-    .then(json => {
+    .then((response) => response.json())
+    .then((json) => {
       return {
         name,
-        data: json.data.children.map(child => child.data),
+        data: json.data.children.map((child) => child.data),
       }
     })
 }

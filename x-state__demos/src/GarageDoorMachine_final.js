@@ -1,6 +1,6 @@
 import { Machine, assign } from "xstate"
 
-const garageDoorMachine = Machine(
+export const garageDoorMachine = Machine(
   {
     id: "garageDoor",
     initial: "idle",
@@ -11,6 +11,7 @@ const garageDoorMachine = Machine(
     },
     states: {
       idle: {
+        initial: "waiting",
         on: {
           PRESS_DOWN: {
             target: "#garageDoor.idle.lowering",
@@ -21,9 +22,8 @@ const garageDoorMachine = Machine(
             cond: ({ pctOpen }) => pctOpen < 100,
           },
         },
-        initial: "initial",
         states: {
-          initial: "lowering",
+          waiting: {},
           lowering: {
             initial: "moving",
             states: {

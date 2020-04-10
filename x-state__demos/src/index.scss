@@ -19,3 +19,19 @@ img {
 .App {
   text-align: center;
 }
+
+.remote .a {
+  fill: #010101;
+}
+
+.remote .r_stroke {
+  stroke: #231f20;
+  stroke-linejoin: round;
+  fill: #fff;
+  stroke-width: 10px;
+}
+.remote .button {
+  fill: #006838;
+  stroke-width: 4px;
+  cursor: pointer;
+}

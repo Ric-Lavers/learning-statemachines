@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
-import { assign, Machine } from "xstate"
+import { Machine, assign } from "xstate"
 
-export const carDoorMachine = Machine(
+/*
+ export const carDoorMachine = Machine(
   {
     id: "carDoor",
     initial: "idle",
@@ -163,98 +164,258 @@ export const carDoor_v2 = Machine(
     },
   },
 )
+ */
 
 export const garageDoor_v3 = Machine(
   {
     id: "garageDoor",
-    initial: "idle",
+    initial: "redditIdle",
     context: {
+      subreddits: {}, // none selected
+      posts: [{ title: "fetch for items" }],
+      count: 0,
       pctOpen: 100,
       interval: 250,
       isOpen: true,
     },
     states: {
-      // idle: {
-      // on: {
-      //   PRESS_DOWN: {
-      //     target: ".lowering",
-      //     cond: ({ pctOpen }) => pctOpen > 0,
-      //   },
-      //   PRESS_UP: {
-      //     target: ".rising",
-      //     cond: ({ pctOpen }) => pctOpen < 100,
-      //   },
-      // },
-      //   initial: "initial",
-      //   states: {
-      //     initial: "lowering",
-      //     lowering: {
-      //       type: "atomic",
-      //       initial: "moving",
-      //       states: {
-      //         moving: {
-      //           type: "atomic",
-      //           invoke: {
-      //             src: ({ interval }) => (callBack) => {
-      //               const intervalID = setInterval(() => {
-      //                 callBack("DECREASE_OPEN_PCT")
-      //               }, interval)
-      //               return () => clearInterval(intervalID)
-      //             },
-      //           },
-      //           on: {
-      //             PRESS_DOWN: "#garageDoor.idle",
-      //             DECREASE_OPEN_PCT: {
-      //               actions: "closing",
-      //             },
-      //             "": {
-      //               target: "closed",
-      //               cond: "isClosed",
-      //             },
-      //           },
-      //           activities: ["beeping"],
-      //         },
-      //         closed: {
-      //           type: "final",
-      //         },
-      //       },
-      //     },
-      //     rising: {
-      //       type: "atomic",
-      //       initial: "moving",
-      //       states: {
-      //         moving: {
-      //           type: "atomic",
-      //           invoke: {
-      //             src: ({ interval }) => (callBack) => {
-      //               const intervalID = setInterval(() => {
-      //                 callBack("INCREASE_OPEN_PCT")
-      //               }, interval)
-      //               return () => clearInterval(intervalID)
-      //             },
-      //           },
-      //           on: {
-      //             PRESS_UP: "#garageDoor.idle",
-      //             INCREASE_OPEN_PCT: {
-      //               actions: "opening",
-      //             },
-      //             "": {
-      //               target: "open",
-      //               cond: "isOpen",
-      //             },
-      //           },
-      //           activities: ["beeping"],
-      //         },
-      //         open: {
-      //           type: "final",
-      //         },
-      //       },
-      //     },
-      //   },
-      // },
+      redditIdle: {},
+      selected: {
+        initial: "loading",
+        states /* keyword */: {
+          loading: {
+            invoke: {
+              id: "fetch-subreddit",
+              autoForward: true,
+              src: invokeFetchSubreddit,
+              //* special x-state transitions for promises
+              onDone: {
+                target: "loaded",
+                actions: assign((context, event) => {
+                  return {
+                    subreddits: {
+                      [event.data.name]: event.data.data,
+                      ...context.subreddits,
+                    },
+                    posts: event.data.data,
+                  }
+                }),
+              },
+              onError: {
+                target: "retry",
+                actions: assign(({ count }) => {
+                  return {
+                    count: count + 1,
+                  }
+                }),
+              },
+            },
+          },
+          loaded: {},
+          retry: {
+            on: {
+              "": {
+                target: "loading",
+                cond: "glassIsFull",
+              },
+              RETRY: {
+                target: "loading",
+                actions: assign((context, event) => {
+                  console.log("context.count", context.count)
+
+                  if (context.count < 6) {
+                    return {
+                      count: context.count + 1,
+                    }
+                  }
+                }),
+              },
+            },
+            invoke: {
+              id: "test",
+              target: "loading",
+              // src: () =>
+              //   assign({
+              //     count: ({ count }) => count + 1
+              //   })
+            },
+          },
+          failed: {},
+        },
+      },
+
+      idle: {
+        on: {
+          PRESS_DOWN: {
+            target: "#garageDoor.idle.lowering",
+            cond: ({ pctOpen }) => pctOpen > 0,
+          },
+          PRESS_UP: {
+            target: "#garageDoor.idle.rising",
+            cond: ({ pctOpen }) => pctOpen < 100,
+          },
+        },
+        initial: "initial",
+        states: {
+          lowering: {
+            initial: "moving",
+            states: {
+              moving: {
+                type: "atomic",
+                invoke: {
+                  src: ({ interval }) => (callBack) => {
+                    const intervalID = setInterval(() => {
+                      callBack("DECREASE_OPEN_PCT")
+                    }, interval)
+
+                    return () => clearInterval(intervalID)
+                  },
+                },
+                on: {
+                  PRESS_DOWN: "#garageDoor.idle",
+                  DECREASE_OPEN_PCT: {
+                    actions: "closing",
+                  },
+                  "": {
+                    target: "closed",
+                    cond: "isClosed",
+                  },
+                },
+                activities: ["beeping"],
+              },
+              closed: {
+                type: "final",
+              },
+            },
+          },
+          rising: {
+            initial: "moving",
+            states: {
+              moving: {
+                invoke: {
+                  src: ({ interval }) => (callBack) => {
+                    const intervalID = setInterval(() => {
+                      callBack("INCREASE_OPEN_PCT")
+                    }, interval)
+
+                    return () => clearInterval(intervalID)
+                  },
+                },
+                on: {
+                  PRESS_UP: "#garageDoor.idle",
+                  INCREASE_OPEN_PCT: {
+                    actions: "opening",
+                  },
+                  "": {
+                    target: "open",
+                    cond: "isOpen",
+                  },
+                },
+                activities: ["beeping"],
+              },
+              open: {
+                type: "final",
+              },
+            },
+          },
+        },
+      },
     },
+    on: {
+      SELECT: [
+        {
+          target: ".selected",
+          cond: (context, event) => !context.subreddits[event.name],
+          actions: assign({
+            subreddit: (context, event) => event.name,
+          }),
+        },
+        {
+          target: ".selected.loaded",
+        },
+      ],
+    },
+    /*   states: {
+      idle: {
+        on: {
+          PRESS_DOWN: {
+            target: "#garageDoor.idle.lowering",
+            cond: ({ pctOpen }) => pctOpen > 0,
+          },
+          PRESS_UP: {
+            target: "#garageDoor.idle.rising",
+            cond: ({ pctOpen }) => pctOpen < 100,
+          },
+        },
+        initial: "initial",
+        states: {
+          initial: "lowering",
+          lowering: {
+            initial: "moving",
+            states: {
+              moving: {
+                type: "atomic",
+                invoke: {
+                  src: ({ interval }) => (callBack) => {
+                    const intervalID = setInterval(() => {
+                      callBack("DECREASE_OPEN_PCT")
+                    }, interval)
+
+                    return () => clearInterval(intervalID)
+                  },
+                },
+                on: {
+                  PRESS_DOWN: "#garageDoor.idle",
+                  DECREASE_OPEN_PCT: {
+                    actions: "closing",
+                  },
+                  "": {
+                    target: "closed",
+                    cond: "isClosed",
+                  },
+                },
+                activities: ["beeping"],
+              },
+              closed: {
+                type: "final",
+              },
+            },
+          },
+          rising: {
+            initial: "moving",
+            states: {
+              moving: {
+                invoke: {
+                  src: ({ interval }) => (callBack) => {
+                    const intervalID = setInterval(() => {
+                      callBack("INCREASE_OPEN_PCT")
+                    }, interval)
+
+                    return () => clearInterval(intervalID)
+                  },
+                },
+                on: {
+                  PRESS_UP: "#garageDoor.idle",
+                  INCREASE_OPEN_PCT: {
+                    actions: "opening",
+                  },
+                  "": {
+                    target: "open",
+                    cond: "isOpen",
+                  },
+                },
+                activities: ["beeping"],
+              },
+              open: {
+                type: "final",
+              },
+            },
+          },
+        },
+      },
+    }, */
   },
-  /* {
+  {
     guards: {
       isOpen: ({ pctOpen }) => pctOpen >= 100,
       isClosed: ({ pctOpen }) => pctOpen <= 0,
@@ -265,14 +426,14 @@ export const garageDoor_v3 = Machine(
         pctOpen: ({ pctOpen, interval }) => {
           // console.log("opening", pctOpen)
           // should rise are a rate of 25% per second
-          return (pctOpen + 25 / (1000 / interval)) | 0
+          return pctOpen + 25 / (1000 / interval)
         },
       }),
       closing: assign({
         pctOpen: ({ pctOpen, interval }) => {
           // console.log("closing ", pctOpen)
           // should close are a rate of 25% per second
-          return (pctOpen - 25 / (1000 / interval)) | 0
+          return pctOpen - 25 / (1000 / interval)
         },
       }),
     },
@@ -287,5 +448,26 @@ export const garageDoor_v3 = Machine(
         return () => clearInterval(interval)
       },
     },
-  }, */
+  },
 )
+function invokeFetchSubreddit(context, { name }) {
+  const { subreddits } = context
+
+  // return new Promise((res, rej) => {
+  //   setTimeout(() => {
+  //     res({ something: "else" });
+  //   }, 500);
+  //   setTimeout(() => {
+  //     rej({ something: "bad" });
+  //   }, 1500);
+  // });
+
+  return fetch(`https://www.reddit.com/r/${name}.json`)
+    .then((response) => response.json())
+    .then((json) => {
+      return {
+        name,
+        data: json.data.children.map((child) => child.data),
+      }
+    })
+}
