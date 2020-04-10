@@ -8,7 +8,10 @@ import Remote from "./Remote"
 
 const GarageDoorExample = () => {
   const [
-    current,
+    {
+      context: { pctOpen },
+      ...current
+    },
     send, // shape = (type, name)
   ] = useMachine(garageDoorMachine)
   const Door = React.useRef({
@@ -24,16 +27,31 @@ const GarageDoorExample = () => {
     }
   }, [])
 
-  function rise(pct) {
+  React.useEffect(() => {
     const { el, height } = Door.current
-    el.style.transform = `translateY(-${height * (pct / 100)})`
+    el.style.transform = `translateY(-${height * (pctOpen / 100)}px)`
+  }, [pctOpen])
+
+  function rise(e) {
+    // const { el, height } = Door.current
+    // el.style.transform = `translateY(-${height * (pctOpen / 100)})`
+    // console.log("rise", e)
+
+    send("PRESS_UP")
   }
-  console.log(current)
+  function lower(e) {
+    // const { el, height } = Door.current
+    // el.style.transform = `translateY(-${height * (pctOpen / 100)})`
+    // console.log("lower", e)
+
+    send("PRESS_DOWN")
+  }
 
   return (
     <>
+      <pre>{JSON.stringify(current.value)}</pre>
       <GarageDoor />
-      <Remote height={160} />
+      <Remote height={160} onUpButton={rise} onDownButton={lower} />
     </>
   )
 }

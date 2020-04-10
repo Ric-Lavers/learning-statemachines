@@ -11,7 +11,7 @@ export const garageDoorMachine = Machine(
     },
     states: {
       idle: {
-        initial: "waiting",
+        initial: "initial",
         on: {
           PRESS_DOWN: {
             target: "#garageDoor.idle.lowering",
@@ -23,7 +23,7 @@ export const garageDoorMachine = Machine(
           },
         },
         states: {
-          waiting: {},
+          initial: {},
           lowering: {
             initial: "moving",
             states: {
