@@ -21,13 +21,27 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-  <title>React App</title>
+  <title>X state demo</title>
 
   <!-- grid style -->
   <style>
-    .tall-panel {
+    /* .tall-panel {
       grid-row-end: span 2;
       border: 1px solid purple
+    } */
+
+    .main {
+      height: 100%;
+      display: grid;
+      grid-template-columns: minmax(300px, 1fr) minmax(600px, 2fr);
+      grid-template-rows: 100%;
+      grid-gap: 25px;
+    }
+
+    @media only screen and (max-width: 600px) {
+      .main {
+        display: block;
+      }
     }
   </style>
 </head>
@@ -36,24 +50,15 @@
   <noscript>You need to enable JavaScript to run this app.</noscript>
 
 
-  <div style="display: grid;
-    
-    grid-template-columns: minmax(300px, 1fr) minmax(600px, 2fr);
-    grid-template-rows: 450px 450px;
-    grid-gap:25px;
-  ">
-    <!-- <div id="l-t">
-      <iframe src="./timingFunction_w.rAF.html" height="450" width="450"></iframe>
-    </div> -->
-    <div id="r" class="tall-panel">
+  <section class="main">
+    <div>
       <div id="root"></div>
     </div>
-    <div id="l-a" class="tall-panel">
+    <div>
       <iframe src="https://xstate.js.org/viz/?gist=8cad989b519f2ff932d95fff125edfe9" height="100%"
         width="100%"></iframe>
     </div>
-    <div id="r"></div>
-  </div>
+  </section>
 
 
 

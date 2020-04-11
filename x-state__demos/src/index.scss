@@ -30,8 +30,13 @@ img {
   fill: #fff;
   stroke-width: 10px;
 }
+
 .remote .button {
   fill: #006838;
   stroke-width: 4px;
   cursor: pointer;
+}
+
+.red {
+  fill: red !important
 }

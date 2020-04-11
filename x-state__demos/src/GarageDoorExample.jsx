@@ -10,9 +10,10 @@ const GarageDoorExample = () => {
   const [
     {
       context: { pctOpen },
+      value,
       ...current
     },
-    send, // shape = (type, name)
+    send,
   ] = useMachine(garageDoorMachine)
   const Door = React.useRef({
     el: null,
@@ -32,26 +33,27 @@ const GarageDoorExample = () => {
     el.style.transform = `translateY(-${height * (pctOpen / 100)}px)`
   }, [pctOpen])
 
-  function rise(e) {
-    // const { el, height } = Door.current
-    // el.style.transform = `translateY(-${height * (pctOpen / 100)})`
-    // console.log("rise", e)
-
+  function rise() {
     send("PRESS_UP")
   }
-  function lower(e) {
-    // const { el, height } = Door.current
-    // el.style.transform = `translateY(-${height * (pctOpen / 100)})`
-    // console.log("lower", e)
-
+  function lower() {
     send("PRESS_DOWN")
   }
 
   return (
     <>
-      <pre>{JSON.stringify(current.value)}</pre>
+      <pre>
+        {JSON.stringify(value)}
+        {JSON.stringify(current.matches({ idle: { rising: "open" } }))}
+      </pre>
       <GarageDoor />
-      <Remote height={160} onUpButton={rise} onDownButton={lower} />
+      <Remote
+        isClosed={current.matches({ idle: { lowering: "closed" } })}
+        isOpen={current.matches({ idle: { rising: "open" } })}
+        height={160}
+        onUpButton={rise}
+        onDownButton={lower}
+      />
     </>
   )
 }

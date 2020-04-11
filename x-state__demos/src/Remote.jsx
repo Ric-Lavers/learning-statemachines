@@ -1,6 +1,17 @@
 import React from "react"
 
-const Remote = ({ onUpButton, onDownButton, ...props }) => {
+const Remote = ({
+  onUpButton,
+  onDownButton,
+  isOpen = false,
+  isClosed = false,
+  ...props
+}) => {
+  console.log({
+    isOpen,
+    isClosed,
+  })
+
   return (
     <svg
       className="remote"
@@ -26,13 +37,13 @@ const Remote = ({ onUpButton, onDownButton, ...props }) => {
 
       <polygon
         id="UP_BUTTON"
-        className="r_stroke button"
+        className={`r_stroke button ${isOpen && "red"}`}
         onClick={onUpButton}
         points="119.01 103.53 93.03 148.53 144.99 148.53 119.01 103.53"
       />
       <polygon
         id="DOWN_BUTTON"
-        className="r_stroke button"
+        className={`r_stroke button ${isClosed && "red"}`}
         onClick={onDownButton}
         points="119.01 218.86 144.99 173.86 93.03 173.86 119.01 218.86"
       />
