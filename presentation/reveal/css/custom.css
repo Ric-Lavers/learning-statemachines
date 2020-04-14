@@ -1,0 +1,15 @@
+.left {
+	text-align: left;
+}
+
+section {
+	font-size: 0.7em;
+}
+
+.space {
+	padding: 24px 0;
+}
+
+li:first-letter {
+	text-transform: capitalize;
+}

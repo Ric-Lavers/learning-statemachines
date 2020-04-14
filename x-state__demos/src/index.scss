@@ -20,6 +20,20 @@ img {
   text-align: center;
 }
 
+.main {
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(300px, 1fr) minmax(600px, 2fr);
+  grid-template-rows: 100%;
+  grid-gap: 25px;
+}
+
+@media only screen and (max-width: 600px) {
+  .main {
+    display: block;
+  }
+}
+
 .remote .a {
   fill: #010101;
 }

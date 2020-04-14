@@ -1,8 +1,8 @@
 import { Machine, assign } from "xstate"
 
 const selectEvent = {
-  type: "SELECT", // event type
-  name: "funny", // subreddit name
+  "type": "SELECT",
+  "name": "funny",
 }
 
 export const redditMachine = Machine({
@@ -17,7 +17,7 @@ export const redditMachine = Machine({
     idle: {},
     selected: {
       initial: "loading",
-      states /* keyword */: {
+      states: {
         loading: {
           invoke: {
             id: "fetch-subreddit",
@@ -49,15 +49,10 @@ export const redditMachine = Machine({
         loaded: {},
         retry: {
           on: {
-            "": {
-              target: "loading",
-              cond: "glassIsFull",
-            },
             RETRY: {
               target: "loading",
               actions: assign((context, event) => {
                 console.log("context.count", context.count)
-
                 if (context.count < 6) {
                   return {
                     count: context.count + 1,

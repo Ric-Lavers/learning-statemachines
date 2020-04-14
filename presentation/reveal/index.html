@@ -1,0 +1,259 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>Intro to X-State</title>
+
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/black.css">
+
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="lib/css/monokai.css">
+	<!-- added by me -->
+	<link rel="stylesheet" href="css/custom.css">
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		document.getElementsByTagName('head')[0].appendChild(link);
+	</script>
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+			<section>
+				<img src="images/x-state_logo.svg" style="max-height: 240px; max-width: 400px;" />
+
+				<h2>introduction to X-state</h2>
+				<p>-Ric Lavers</p>
+			</section>
+			<section>
+				<h2>Structure</h2>
+				<div class="left" style="column-count: 3">
+					<ul class="fragment space">
+						<h3>What</h3>
+						<li>is xstate</li>
+						<li>is SCXML</li>
+						<li>is a finate state machine</li>
+						<li>is a state chart</li>
+						<li>are some basics</li>
+					</ul>
+					<ul class="fragment space">
+						<h3>Why</h3>
+						<li>use it</li>
+						<li>not use it</li>
+					</ul>
+					<ul class="fragment space">
+						<h3>How</h3>
+						<li>configuring state nodes</li>
+						<li>lets model my garage door</li>
+					</ul>
+					<ul class="fragment space">
+						<h3>When</h3>
+						<li>should you reach for this</li>
+					</ul>
+					<ul class="fragment space">
+						<h3>Where</h3>
+						<li>to find out more</li>
+					</ul>
+				</div>
+			</section>
+			<section>
+				<h2>What...</h2>
+				<div class="left">
+					<h3>...is XState</h3>
+					<p>
+						XState is a library for creating, interpreting, and executing <b>finite state machines </b> and
+						<b>statecharts</b>,
+						as well
+						as managing invocations of those machines as actors.
+					</p>
+					<p>Created and primarily maintained by <i>David Khourshid</i> <a
+							href="https://twitter.com/DavidKPiano">@DavidKPiano</a> </p>
+					<h3>API goals</h3>
+					<ul>
+						<li>Based upon state machine formali<a target="_blank" href="https://www.w3.org/TR/scxml/"> SCXML</a></li>
+						<li> and <a target='_blank'
+								href="http://www.inf.ed.ac.uk/teaching/courses/seoc/2005_2006/resources/statecharts.pdf">David Harel's
+								state charts</a></li>
+						<li>Promotes the actor model</li>
+						<li>Framework and platform agnostic </li>
+						<li>Pure functional API</li>
+						<li>Zero dependancies</li>
+					</ul>
+
+				</div>
+			</section>
+			<section>
+				<h2>What...</h2>
+				<div class="left">
+					<h3>...is a finite state machine</h3>
+					<div>
+						<ol>
+							Formally, finite state machines have five parts:
+							<li> One <b>initial state</b></li>
+							<li> A finite number of <b>states</b></li>
+							<li> A finite number of <b>events</b></li>
+							<li> a mapping of <b>transitions</b></li>
+							<li> A finite number of (possibly empty) <b>final states</b></li>
+						</ol>
+						<a class="fragment" href="https://xstate.js.org/viz/" target="_blank">
+							<img style="object-fit: contain;
+						background-color: white;" src="images/fetchMachine-annotated.png"></a>
+
+					</div>
+				</div>
+			</section>
+			<section>
+				<h2>What...</h2>
+				<div class="left">
+					<h3>...are some key terms for State Charts</h3>
+					<ul>
+						<li><b>Actions</b> - side effects of events</li>
+						<li><b>Guards</b> - conditional transitions</li>
+						<li><b>Context</b> - extended state (or store)</li>
+						<li><b>Hierarchy</b> - nested states</li>
+						<li><b>Orthogonality</b> - parallel states</li>
+					</ul>
+				</div>
+			</section>
+			<section>
+				<h2>Why</h2>
+				<div class="left">
+					<h3>...use XState</h3>
+					<ul>
+						<li>Based on 30 years of state chart formalisations, benefiting from working groups reseach into edge cases
+						</li>
+						<li>refuge from <i>"shiney object syndrome"</i> </li>
+						<li>Now in version 4 its passed the critial threshold of maturity</li>
+						<li>Strong and growning community</li>
+						<li>Its east to understand a chart</li>
+						<li>the behaviour is decoupled</li>
+						<li>process of building exposes all states to be explored</li>
+						<li>studies show that there are less bugs</li>
+						<li>better documentation</li>
+						<li>easier to work with BA's and designers</li>
+						<li>easier to make changes</li>
+					</ul>
+				</div>
+			</section>
+			<section>
+				<h2>Why...</h2>
+				<div class="left">
+					<h3>...not use XState</h3>
+					<ul>
+						<li>Programmer need to learn something new</li>
+						<li>Learning curve is steep!</li>
+						<li>Different way of coding</li>
+						<li>The overhead of extracting the behaviour may <i>increase</i> the number of lines written, especially for
+							smaller charts.</li>
+					</ul>
+					<div class="fragment space">
+						<h3>however</h3>
+						<p>unless your building a <b>explict</b> state machine your buiilding a <b>implict</b> one</p>
+					</div>
+				</div>
+			</section>
+			<section>
+				<h2>How...</h2>
+				<div class="left" style="column-count: 2">
+					<div>
+						<h3>...to set it up</h3>
+						<p>The argumments to the Machine factory set up are </p>
+						<ol>
+							<li>The state node config</li>
+							<li>The options config
+								<ul>
+									<li>actions</li>
+									<li>activities</li>
+									<li>guards</li>
+									<li>services</li>
+								</ul>
+							</li>
+						</ol>
+					</div>
+					<img src="images/options-config.png" />
+
+
+				</div>
+			</section>
+			<section>
+				<h2>Demo</h2>
+			</section>
+			<section>
+				<h2>When...</h2>
+				<div class="left">
+					<h3>...should you reach for this</h3>
+					<p>perhaps when your building something complicated</p>
+					<p></p>
+
+				</div>
+			</section>
+			<section>
+				<h2>Where...</h2>
+				<div class="left">
+					<h3>...can i learn more</h3>
+					<ul>
+						<li><a href="xstate.js.org/docs"> The XState docs</a> are excellent</li>
+						<li>Any of David Khourshid talks on youtube
+							<ul>
+								<li><a href="https://www.youtube.com/watch?v=RqTxtOXcv8Y">js conf iceland</a></li>
+								<li><a href="https://www.youtube.com/watch?v=hiT4Q1ntvzg">Formal Forms with State Machines | React Next
+										2019</a></li>
+								<li><a href="https://www.youtube.com/watch?v=uRfQJJArZEg">fun fun function XState</a></li>
+								<li>and many more</li>
+							</ul>
+						</li>
+						<li><a href="http://www.inf.ed.ac.uk/teaching/courses/seoc/2005_2006/resources/statecharts.pdf">
+								STATECHARTS - David HAREL</a></li>
+						<li><a href="https://statecharts.github.io/">statecharts.github.io/</a></li>
+					</ul>
+				</div>
+			</section>
+
+
+			<section data-markdown>
+				<textarea data-template>
+						## Page title
+				
+						A paragraph with some text and a [link](http://hakim.se).
+					</textarea>
+			</section>
+		</div>
+	</div>
+
+	<script src="js/reveal.js"></script>
+
+	<script>
+		// More info about config & dependencies:
+		// - https://github.com/hakimel/reveal.js#configuration
+		// - https://github.com/hakimel/reveal.js#dependencies
+		Reveal.initialize({
+			hash: true,
+			dependencies: [{
+					src: 'plugin/markdown/marked.js'
+				},
+				{
+					src: 'plugin/markdown/markdown.js'
+				},
+				{
+					src: 'plugin/highlight/highlight.js',
+					async: true
+				},
+				{
+					src: 'plugin/notes/notes.js',
+					async: true
+				}
+			]
+		});
+	</script>
+</body>
+
+</html>

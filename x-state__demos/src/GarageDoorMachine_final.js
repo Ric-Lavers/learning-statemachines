@@ -30,9 +30,9 @@ export const garageDoorMachine = Machine(
               moving: {
                 type: "atomic",
                 invoke: {
-                  src: ({ interval }) => (callBack) => {
+                  src: ({ interval }) => (send) => {
                     const intervalID = setInterval(() => {
-                      callBack("DECREASE_OPEN_PCT")
+                      send("DECREASE_OPEN_PCT")
                     }, interval)
 
                     return () => clearInterval(intervalID)
@@ -98,14 +98,12 @@ export const garageDoorMachine = Machine(
       setMoving: assign((context) => ({ ...context, isOpen: "moving" })),
       opening: assign({
         pctOpen: ({ pctOpen, interval }) => {
-          // console.log("opening", pctOpen)
           // should rise are a rate of 25% per second
           return pctOpen + 25 / (1000 / interval)
         },
       }),
       closing: assign({
         pctOpen: ({ pctOpen, interval }) => {
-          // console.log("closing ", pctOpen)
           // should close are a rate of 25% per second
           return pctOpen - 25 / (1000 / interval)
         },

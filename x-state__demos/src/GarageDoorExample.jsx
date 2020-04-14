@@ -7,14 +7,13 @@ import { ReactComponent as GarageDoor } from "./GARAGE-DOOR.svg"
 import Remote from "./Remote"
 
 const GarageDoorExample = () => {
-  const [
-    {
-      context: { pctOpen },
-      value,
-      ...current
-    },
-    send,
-  ] = useMachine(garageDoorMachine)
+  const [state, send] = useMachine(garageDoorMachine)
+  const {
+    context: { pctOpen },
+    value,
+    matches,
+  } = state
+
   const Door = React.useRef({
     el: null,
     height: 0,
@@ -44,12 +43,12 @@ const GarageDoorExample = () => {
     <>
       <pre>
         {JSON.stringify(value)}
-        {JSON.stringify(current.matches({ idle: { rising: "open" } }))}
+        {JSON.stringify(matches({ idle: { rising: "open" } }))}
       </pre>
       <GarageDoor />
       <Remote
-        isClosed={current.matches({ idle: { lowering: "closed" } })}
-        isOpen={current.matches({ idle: { rising: "open" } })}
+        isClosed={matches({ idle: { lowering: "closed" } })}
+        isOpen={matches({ idle: { rising: "open" } })}
         height={160}
         onUpButton={rise}
         onDownButton={lower}
